@@ -1,0 +1,3 @@
+# Don't copy theese folders from host to container
+node_modules
+dist
