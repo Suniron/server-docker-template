@@ -30,12 +30,14 @@ COPY --chown=node:node src src
 RUN npm run build
 
 # == PRODUCTION ==
-FROM builder as prod
+FROM base as production
 
 ENV NODE_ENV=production
 
 # Do a clean install of packages
 RUN npm ci --only=production
+
+COPY --from=builder /app/dist/ /app/dist
 
 USER node 
 
