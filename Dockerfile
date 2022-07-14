@@ -1,44 +1,50 @@
-# == BASE ==
-FROM node:16.16-alpine3.16 as base
+# ================
+# == BASE STAGE ==
+# ================
+FROM node:16-alpine as base
 
 WORKDIR /app
 
-COPY --chown=node:node package*.json .
+COPY package*.json .
 
-# == DEVELOPMENT (local) ==
+# ==========================================
+# == DEVELOPMENT STAGE (local usage only) ==
+# ==========================================
 FROM base as development
 
 ENV NODE_ENV=development
-
-RUN npm install
-
-COPY --chown=node:node . .
-
-USER node 
 
 CMD [ "npm", "run", "dev" ]
 
 # == BUILDER ==
 FROM base as builder
 
+# This is needed to have all build dependencies:
+ENV NODE_ENV=development
+
 RUN npm ci 
 
-COPY --chown=node:node tsconfig*.json ./
+COPY tsconfig*.json ./
 
-COPY --chown=node:node src src
+# Only src subfolders & files are needed to build 
+COPY ./src /app/src
 
 RUN npm run build
 
-# == PRODUCTION ==
+# ======================
+# == PRODUCTION STAGE ==
+# ======================
 FROM base as production
 
 ENV NODE_ENV=production
 
-# Do a clean install of packages
-RUN npm ci --only=production
+# Do a clean install of packages (with only production dependencies mode because "NODE_ENV=production")
+RUN npm ci
 
-COPY --from=builder /app/dist/ /app/dist
+# To have lightest as possible, take only built files:
+COPY --from=builder --chown=node:node /app/dist/ /app/dist
 
-USER node 
+# Switch to "node" user to improve security
+USER node
 
 CMD [ "npm", "run", "start" ]
