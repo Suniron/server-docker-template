@@ -10,7 +10,7 @@ If you want, [you can buy me a coffee](https://www.buymeacoffee.com/suniron)
 
 ## TODO
 
-- [] add [devcontainer](https://code.visualstudio.com/docs/remote/containers)
-- [] add rewritable environment variables (example: server port)
-- [] add [Jest](https://jestjs.io/fr/) unit tests
-- [] add [Prisma](https://www.prisma.io/) ORM
+- [ ] add [devcontainer](https://code.visualstudio.com/docs/remote/containers)
+- [ ] add rewritable environment variables (example: server port)
+- [ ] add [Jest](https://jestjs.io/fr/) unit tests
+- [ ] add [Prisma](https://www.prisma.io/) ORM
